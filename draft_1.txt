@@ -1,0 +1,170 @@
+SAP: Super Article Protocole (draft 1)
+
+0- Introduction
+1- Notation
+	1.0- Type de variable
+	1.1- Information complémentaire
+2- Objet
+	2.0- Article
+	2.1- Section
+	2.2- Content
+	2.3- Type
+3- Communication
+	3.0- Introduction
+	3.1- Code d'erreur
+4- Format URL
+	4.0 Détail article
+		4.0.0 Requête
+		4.0.1 Réponse
+	4.1 Détail page
+		4.1.0 Requête
+		4.1.1 Réponse
+	4.2 Article random
+		4.2.0 Requête
+		4.2.1 Réponse
+	4.3 Articles archivés
+		4.3.0 Requête
+		4.3.1 Réponse
+
+
+0- Introduction
+
+SAP acronyme de "Super Article Protocole".
+Basé sur HTTP et JSON.
+Il décrit un format générique d'article et un style de communication pour la récupération d'article.
+Pensé par Johann Lecocq (johann-lecocq.fr)
+
+Un article décrit un contenu pouvant être divisé en plusieurs sous partie.
+Une page contient plusieurs articles.
+
+
+
+1- Notation
+
+1.0- Type de variable
+
+[str] -> chaine de caractères au format unicode
+[int] -> entier 4 octets
+[date] -> date au format dd/MM/yyyy par exemple 06/10/2014
+[enu(X)] -> énumération de type X
+[list(X)] -> liste de valeurs de type X
+
+
+1.1- Information complémentaire
+
+(OPT) -> paramètre ou champ optionnel
+
+
+
+2- Objet
+
+2.0- Article
+
+L'objet Article décrit les informations d'un article.
+Il peut y avoir plusieurs sections sur un article, par exemple l'article en lui même mais aussi les commentaires.
+
+Article:
+	id[str]: identifiant de l'article
+	publish_date[str](OPT): date de publication de l'article
+	categorie[str](OPT): catégorie de l'article
+	author[str](OPT): auteur de l'article
+	sections[list(Section)]: liste de section
+
+
+2.1- Section
+
+L'objet Section contient les données de l'article
+
+Section:
+	id[str]: identifiant de la section
+	contents[list(Content)]: liste de content
+
+
+2.2- Content
+
+L'objet Content décrit la donnée réelle de l'article, un texte, une image en Base64 par exemple.
+
+Content:
+	type[enu(Type)]: Type de la valeur
+	value[str]: valeur du contenu en chaine de caractères
+
+
+2.3- Type
+
+Enumération des types de valeur que content peut accepter.
+
+Type:
+	STR-> chaine de caractères au format unicode
+	INT-> entier
+	BASE64 -> texte au format ascii encodé en Base64
+	IMG/Base64 -> image encodé au format Base64
+	BIN -> donnée binaire encodé en Base64
+
+
+
+3- Communication
+
+3.0- Introduction
+
+Il est basé sur le protocole HTTP/1.0. Il s'inspire du style d'architecture REST.
+
+
+3.1- Code d'erreur
+
+Il reprend les mêmes codes d'erreur que HTTP.
+Le code d'erreur "521 Parsing Error" est ajouté dans le cas où le serveur d'article est un serveur proxy qui parse lui même des articles pour les renvoyer au format décrit par le protocole SAP.
+
+Si le serveur renvoie un code d'erreur 521, le corps de la réponse est corrompu.
+
+
+
+4- Format URL
+
+4.0 Détail article
+
+4.0.0 Requête
+
+/article/{id}
+id: identifiant de l'article
+
+4.0.1 Réponse
+
+Retourne un objet Article.
+
+
+4.1 Détail page
+
+4.1.0 Requête
+
+/page/{id}
+id: identifiant de la page
+
+4.1.1 Réponse
+
+Retourne un tableau d'Article.
+
+
+4.2 Article random
+
+4.2.0 Requête
+
+/random/{id}
+id: identifiant de l'article
+
+4.2.1 Réponse
+
+Retourne un Article.
+
+
+4.3 Articles archivés
+
+4.3.0 Requête
+
+/archives/{annee}/{mois}/{jour}
+annee: année de publication
+mois: mois de publication
+jour(OPT): jour de publication
+
+4.3.1 Réponse
+
+Retourne un tableau d'Article publié le {jour}/{mois}/{annee} ou le {mois}/{annee}.
