@@ -19,12 +19,9 @@ SAP: Super Article Protocole (draft 1)
 	4.1 Détail page
 		4.1.0 Requête
 		4.1.1 Réponse
-	4.2 Article random
+	4.2 Articles archivés
 		4.2.0 Requête
 		4.2.1 Réponse
-	4.3 Articles archivés
-		4.3.0 Requête
-		4.3.1 Réponse
 
 
 0- Introduction
@@ -124,7 +121,7 @@ Si le serveur renvoie un code d'erreur 521, le corps de la réponse est corrompu
 
 4.0.0 Requête
 
-/article/{id}
+/articles/{id}
 id: identifiant de l'article
 
 4.0.1 Réponse
@@ -136,7 +133,7 @@ Retourne un objet Article.
 
 4.1.0 Requête
 
-/page/{id}
+/pages/{id}
 id: identifiant de la page
 
 4.1.1 Réponse
@@ -144,27 +141,15 @@ id: identifiant de la page
 Retourne un tableau d'Article.
 
 
-4.2 Article random
+4.2 Articles archivés
 
 4.2.0 Requête
-
-/random/{id}
-id: identifiant de l'article
-
-4.2.1 Réponse
-
-Retourne un Article.
-
-
-4.3 Articles archivés
-
-4.3.0 Requête
 
 /archives/{annee}/{mois}/{jour}
 annee: année de publication
 mois: mois de publication
 jour(OPT): jour de publication
 
-4.3.1 Réponse
+4.2.1 Réponse
 
 Retourne un tableau d'Article publié le {jour}/{mois}/{annee} ou le {mois}/{annee}.
