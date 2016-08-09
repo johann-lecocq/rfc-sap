@@ -1,0 +1,156 @@
+SAP: Super Article Protocole (draft 1)
+
+0- Introduction
+1- Notation
+    1.0- Variable Type
+    1.1- Additional Information
+2- Object
+    2.0- Article
+    2.1- Section
+    2.2- Content
+    2.3- Type
+3- Communication
+    3.0- Introduction
+    3.1- Error Code
+4-  URL Format
+    4.0 Article Detail
+        4.0.0 Request
+        4.0.1 Response
+    4.1 Page Detail
+        4.1.0 Resquest
+        4.1.1 Response
+    4.2 Article archived
+        4.2.0 Request
+        4.2.1 Response
+
+
+
+0- Introduction
+
+SAP acronym of "Super Article Protocole".
+Based on HTTP and JSON.
+It describes an article generic format and a communication style for an article recovery.
+Thought by Johann Lecocq (johann-lecocq.fr)
+Translate in english by Claire Lecocq.
+
+An article describes a contents which could be split into subparts.
+A part contains several articles.
+
+
+
+1- Notation
+
+1.0- Variable Type
+
+[str] -> chains of characters by unicode format 
+[int] -> integer 4 octets
+[date] -> date format dd/MM/yyyy like 06/10/2014
+[enu(X)] -> enumeration of type X
+[list(X)] -> value list type X
+
+
+1.1- Additional Information
+
+(OPT) -> setting of optional fields
+
+
+
+2- Object
+
+2.0- Article
+
+The object Article describes the informations of an article.
+An article may have multiple sections like itself but also comments. 
+
+Article:
+    id[str]: Article ID
+    publish_date[str](OPT):Date of the publication of the article
+    categorie[str](OPT): category of the article
+    author[str](OPT): autor of the article
+    sections[list(Section)]: section list
+
+
+2.1- Section
+
+The object Section contains the data of the article
+
+Section:
+    id[str]: Section ID
+    contents[list(Content)]: list of the contents
+
+
+2.2- Content
+
+The object Content describes the real data of an article, a text, a picture of example Base64.
+
+Content:
+        type[enu(Type)]: type of the value
+        value[str]: value of the contents in chain of character 
+
+
+2.3- Type
+
+Enumeration value types as content can accept.
+
+Type:
+    STR-> chains of characters by unicode format 
+    INT-> integer
+    BASE64 -> format text ascii encoded by Base64
+    IMG/Base64 -> picture encoded by Base64 format
+    BIN -> binary data encoded by Base64
+
+
+
+3- Communication
+
+3.0- Introduction
+
+It based on the protocol HTTP/1.0. Inspired by the design REST.
+
+
+3.1- Error code
+
+It repeat the same error codes that HTTP.
+The error code "521 Parsing Error" is added when the article server is a proxy server which parse itself some articles to return at a format discribe by the SAP protocol
+If the server return the error code 521, the body of the answer is  distorted (ou corrupt)
+
+
+
+4- URL format 
+
+4.0 Article detail
+
+4.0.0 Request
+
+/articles/{id}
+id: Article ID
+
+4.0.1 Answer
+
+Return an object Article
+
+
+4.1 Page detail
+
+4.1.0 Request
+
+/pages/{id}
+id: page login
+
+4.1.1 Answer
+
+Return at the board Article
+
+
+4.2 Articles archived
+
+4.2.0 Request
+
+/archives/{annee}/{mois}/{jour}
+annee: year of publication
+mois: month of publication
+jour(OPT): day of publication
+
+4.2.1 Answer
+
+Return an Article array published the {jour}/{mois}/{annee} or {mois}/{annee}.
